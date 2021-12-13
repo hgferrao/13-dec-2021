@@ -1,0 +1,17 @@
+trigger duplicateAccount on Account (before insert,before update) {
+    
+  Set<String> accName=new Set<String>();
+    
+    for(Account acc:Trigger.new){
+        accName.add(acc.Name);
+    }
+    
+    List<Account> duplicateAcc=[SELECT Id,name FROM Account WHERE name in:accName];
+    
+    for(Account a:Trigger.new){
+        if(duplicateAcc.size()>0){
+            a.adderror('Account already exists');
+        }
+      
+    }    
+}
